@@ -2,6 +2,7 @@ package btcutil
 
 import (
 	"bytes"
+	"errors"
 
 	"github.com/btcsuite/btcd/chaincfg"
 )
@@ -11,6 +12,12 @@ type AddrType uint8
 const (
 	PubKeyType AddrType = iota
 	ScriptType
+)
+
+var (
+	emptyAddressContent = errors.New("empty address content")
+	invalidHash160Size  = errors.New("invalid hash160 size")
+	invalidAddressType  = errors.New("invalid address type")
 )
 
 type AddrContent struct {
@@ -31,10 +38,10 @@ func EncodeCashAddr(dst Address, param *chaincfg.Params) string {
 	}
 }
 
-func DecodeCashAddr(addr string, param *chaincfg.Params) Address {
+func DecodeCashAddr(addr string, param *chaincfg.Params) (Address, error) {
 	content := decodeCashAddrContent(addr, param)
 	if content == nil || len(content.hash) == 0 {
-		return nil
+		return nil, emptyAddressContent
 	}
 
 	return decodeCashAddrDestination(content, param)
@@ -158,25 +165,25 @@ func decodeCashAddrContent(addr string, param *chaincfg.Params) *AddrContent {
 	return &AddrContent{t, data}
 }
 
-func decodeCashAddrDestination(content *AddrContent, params *chaincfg.Params) Address {
+func decodeCashAddrDestination(content *AddrContent, params *chaincfg.Params) (Address, error) {
 	if len(content.hash) != 20 {
-		return nil
+		return nil, invalidHash160Size
 	}
 
 	switch content.t {
 	case PubKeyType:
 		addr, err := NewAddressPubKeyHash(content.hash, params)
 		if err != nil {
-			return nil
+			return nil, err
 		}
-		return addr
+		return addr, nil
 	case ScriptType:
 		addr, err := NewAddressScriptHashFromHash(content.hash, params)
 		if err != nil {
-			return nil
+			return nil, err
 		}
-		return addr
+		return addr, nil
 	default:
-		return nil
+		return nil, invalidAddressType
 	}
 }

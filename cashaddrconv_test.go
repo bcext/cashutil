@@ -103,8 +103,8 @@ func TestEncodeDecode(t *testing.T) {
 			panic(err)
 		}
 		encode := EncodeCashAddr(dst, net)
-		decode := DecodeCashAddr(encode, net)
-		if decode.String() != dst.String() {
+		decode, err := DecodeCashAddr(encode, net)
+		if err != nil || decode.String() != dst.String() {
 			t.Error("encode or decode error")
 		}
 
@@ -116,8 +116,8 @@ func TestEncodeDecode(t *testing.T) {
 			panic(err)
 		}
 		encode := EncodeCashAddr(dst, net)
-		decode := DecodeCashAddr(encode, net)
-		if decode.String() != dst.String() {
+		decode, err := DecodeCashAddr(encode, net)
+		if err != nil || decode.String() != dst.String() {
 			t.Error("encode or decode error")
 		}
 	}
@@ -140,7 +140,7 @@ func TestInvalidOnWrongNetwork(t *testing.T) {
 				panic(err)
 			}
 			encoded := EncodeCashAddr(pubKeyHashAddr, net)
-			decoded := DecodeCashAddr(encoded, otherNet)
+			decoded, _ := DecodeCashAddr(encoded, otherNet)
 
 			if decoded != nil {
 				t.Error("the decoded address should be nil as to incorrect network")
@@ -160,20 +160,20 @@ func TestRandomDst(t *testing.T) {
 			panic(err)
 		}
 		encodedKey := EncodeCashAddr(pubKeyDst, param)
-		decodedKey := DecodeCashAddr(encodedKey, param)
+		decodedKey, err1 := DecodeCashAddr(encodedKey, param)
 
 		scriptHashDst, err := NewAddressScriptHashFromHash(hash, param)
 		if err != nil {
 			panic(err)
 		}
 		encodedSrc := EncodeCashAddr(scriptHashDst, param)
-		decodedSrc := DecodeCashAddr(encodedSrc, param)
+		decodedSrc, err2 := DecodeCashAddr(encodedSrc, param)
 
 		errString := fmt.Sprintf("cashaddr failed for hash: %s", hex.EncodeToString(hash))
-		if pubKeyDst.String() != decodedKey.String() {
+		if err1 != nil || pubKeyDst.String() != decodedKey.String() {
 			t.Error(errString)
 		}
-		if scriptHashDst.String() != decodedSrc.String() {
+		if err2 != nil || scriptHashDst.String() != decodedSrc.String() {
 			t.Error(errString)
 		}
 	}
@@ -197,7 +197,7 @@ func TestCheckPadding(t *testing.T) {
 	for i := 0; i < 32; i++ {
 		originBytes[len(originBytes)-1] = byte(i)
 		fake := Encode(param.CashAddrPrefix, originBytes)
-		dst := DecodeCashAddr(fake, param)
+		dst, _ := DecodeCashAddr(fake, param)
 
 		// We have 168 bits of payload encoded as 170 bits in 5 bits nimbles. As
 		// a result, we must have 2 zeros.
