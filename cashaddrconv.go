@@ -1,0 +1,182 @@
+package btcutil
+
+import (
+	"bytes"
+
+	"github.com/btcsuite/btcd/chaincfg"
+)
+
+type AddrType uint8
+
+const (
+	PubKeyType AddrType = iota
+	ScriptType
+)
+
+type AddrContent struct {
+	t    AddrType
+	hash []byte
+}
+
+func EncodeCashAddr(dst Address, param *chaincfg.Params) string {
+	switch addr := dst.(type) {
+	case *AddressPubKeyHash:
+		data := packAddrData(addr.Hash160()[:], uint8(PubKeyType))
+		return Encode(param.CashAddrPrefix, data)
+	case *AddressScriptHash:
+		data := packAddrData(addr.Hash160()[:], uint8(ScriptType))
+		return Encode(param.CashAddrPrefix, data)
+	default:
+		return ""
+	}
+}
+
+func DecodeCashAddr(addr string, param *chaincfg.Params) Address {
+	content := decodeCashAddrContent(addr, param)
+	if content == nil || len(content.hash) == 0 {
+		return nil
+	}
+
+	return decodeCashAddrDestination(content, param)
+}
+
+// Convert the data part to a 5 bit representation.
+func packAddrData(id []byte, t uint8) []byte {
+	version := uint8(t << 3)
+	size := len(id)
+	var encodedSize uint8
+	switch size * 8 {
+	case 160:
+		encodedSize = 0
+	case 192:
+		encodedSize = 1
+	case 224:
+		encodedSize = 2
+	case 256:
+		encodedSize = 3
+	case 320:
+		encodedSize = 4
+	case 384:
+		encodedSize = 5
+	case 448:
+		encodedSize = 6
+	case 512:
+		encodedSize = 7
+	default:
+		panic("Error packing cashaddr: invalid address length")
+	}
+
+	version |= encodedSize
+	data := bytes.NewBuffer(make([]byte, 0, len(id)+1))
+	data.WriteByte(version)
+	data.Write(id)
+
+	// Reserve the number of bytes required for a 5-bit packed version of a
+	// hash, with version byte.  Add half a byte(4) so integer math provides
+	// the next multiple-of-5 that would fit all the data.
+	ret, _ := convertBits(8, 5, true, data.Bytes())
+
+	return ret
+}
+
+func convertBits(frombits uint, tobits uint, pad bool, data []byte) ([]byte, bool) {
+	var acc, bits int
+	maxv := (1 << tobits) - 1
+	maxAcc := (1 << (frombits + tobits - 1)) - 1
+
+	ret := bytes.NewBuffer(nil)
+	for _, bit := range data {
+		acc = ((acc << frombits) | int(bit)) & maxAcc
+		bits += int(frombits)
+
+		for bits >= int(tobits) {
+			bits -= int(tobits)
+			ret.WriteByte(byte((acc >> uint(bits)) & maxv))
+		}
+	}
+
+	// We have remaining bits to encode but do not pad.
+	if !pad && bits != 0 {
+		return ret.Bytes(), false
+	}
+
+	// We have remaining bits to encode so we do pad.
+	if pad && bits != 0 {
+		ret.WriteByte(byte(acc << (tobits - uint(bits)) & maxv))
+	}
+
+	return ret.Bytes(), true
+}
+
+func decodeCashAddrContent(addr string, param *chaincfg.Params) *AddrContent {
+	prefix, payload := Decode(addr, param.CashAddrPrefix)
+	if prefix != param.CashAddrPrefix {
+		return nil
+	}
+
+	if len(payload) == 0 {
+		return nil
+	}
+
+	// Check that the padding is zero.
+	extraBits := len(payload) * 5 % 8
+	if extraBits >= 5 {
+		// We have more padding than allowed.
+		return nil
+	}
+
+	last := payload[len(payload)-1]
+	mask := 1<<uint(extraBits) - 1
+	if int(last)&mask != 0 {
+		// We have non zero bits as padding.
+		return nil
+	}
+
+	data, _ := convertBits(5, 8, false, payload)
+
+	// Decode type and size from the version.
+	version := data[0]
+	if version&0x80 != 0 {
+		// First bit is reserved.
+		return nil
+	}
+
+	t := AddrType((version >> 3) & 0x1f)
+	hashSize := 20 + 4*(version&0x03)
+	if version&0x04 != 0 {
+		hashSize *= 2
+	}
+
+	// Check that we decoded the exact number of bytes we expected.
+	if len(data) != int(hashSize)+1 {
+		return nil
+	}
+
+	// Pop the version.
+	data = data[1:]
+
+	return &AddrContent{t, data}
+}
+
+func decodeCashAddrDestination(content *AddrContent, params *chaincfg.Params) Address {
+	if len(content.hash) != 20 {
+		return nil
+	}
+
+	switch content.t {
+	case PubKeyType:
+		addr, err := NewAddressPubKeyHash(content.hash, params)
+		if err != nil {
+			return nil
+		}
+		return addr
+	case ScriptType:
+		addr, err := NewAddressScriptHashFromHash(content.hash, params)
+		if err != nil {
+			return nil
+		}
+		return addr
+	default:
+		return nil
+	}
+}
