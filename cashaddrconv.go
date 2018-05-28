@@ -3,6 +3,7 @@ package btcutil
 import (
 	"bytes"
 	"errors"
+	"strings"
 
 	"github.com/btcsuite/btcd/chaincfg"
 )
@@ -39,6 +40,12 @@ func EncodeCashAddr(dst Address, param *chaincfg.Params) string {
 }
 
 func DecodeCashAddr(addr string, param *chaincfg.Params) (Address, error) {
+	// handle bitcoin address prefixed with net tag
+	if strings.Contains(addr, ":") {
+		pos := strings.LastIndex(addr, ":")
+		addr = addr[pos+1:]
+	}
+
 	content := decodeCashAddrContent(addr, param)
 	if content == nil || len(content.hash) == 0 {
 		return nil, emptyAddressContent
