@@ -367,10 +367,6 @@ func BuildExtFilter(block *wire.MsgBlock) (*gcs.Filter, error) {
 				if txIn.SignatureScript != nil {
 					b.AddScript(txIn.SignatureScript)
 				}
-
-				if len(txIn.Witness) != 0 {
-					b.AddWitness(txIn.Witness)
-				}
 			}
 		}
 	}
