@@ -10,7 +10,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"reflect"
-	"strings"
 	"testing"
 
 	"github.com/btcsuite/btcd/chaincfg"
@@ -480,13 +479,6 @@ func TestAddresses(t *testing.T) {
 			// original.
 			if decodedStringer, ok := decoded.(fmt.Stringer); ok {
 				addr := test.addr
-
-				// For Segwit addresses the string representation
-				// will always be lower case, so in that case we
-				// convert the original to lower case first.
-				if strings.Contains(test.name, "segwit") {
-					addr = strings.ToLower(addr)
-				}
 
 				if addr != decodedStringer.String() {
 					t.Errorf("%v: String on decoded value does not match expected value: %v != %v",
