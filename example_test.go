@@ -1,21 +1,21 @@
-package btcutil_test
+package cashutil_test
 
 import (
 	"fmt"
 	"math"
 
-	"github.com/btcsuite/btcutil"
+	"github.com/bcext/cashutil"
 )
 
 func ExampleAmount() {
 
-	a := btcutil.Amount(0)
+	a := cashutil.Amount(0)
 	fmt.Println("Zero Satoshi:", a)
 
-	a = btcutil.Amount(1e8)
+	a = cashutil.Amount(1e8)
 	fmt.Println("100,000,000 Satoshis:", a)
 
-	a = btcutil.Amount(1e5)
+	a = cashutil.Amount(1e5)
 	fmt.Println("100,000 Satoshis:", a)
 	// Output:
 	// Zero Satoshi: 0 BCH
@@ -24,28 +24,28 @@ func ExampleAmount() {
 }
 
 func ExampleNewAmount() {
-	amountOne, err := btcutil.NewAmount(1)
+	amountOne, err := cashutil.NewAmount(1)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println(amountOne) //Output 1
 
-	amountFraction, err := btcutil.NewAmount(0.01234567)
+	amountFraction, err := cashutil.NewAmount(0.01234567)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println(amountFraction) //Output 2
 
-	amountZero, err := btcutil.NewAmount(0)
+	amountZero, err := cashutil.NewAmount(0)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println(amountZero) //Output 3
 
-	amountNaN, err := btcutil.NewAmount(math.NaN())
+	amountNaN, err := cashutil.NewAmount(math.NaN())
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -59,13 +59,13 @@ func ExampleNewAmount() {
 }
 
 func ExampleAmount_unitConversions() {
-	amount := btcutil.Amount(44433322211100)
+	amount := cashutil.Amount(44433322211100)
 
-	fmt.Println("Satoshi to kBCH:", amount.Format(btcutil.AmountKiloBCH))
+	fmt.Println("Satoshi to kBCH:", amount.Format(cashutil.AmountKiloBCH))
 	fmt.Println("Satoshi to BCH:", amount)
-	fmt.Println("Satoshi to MilliBCH:", amount.Format(btcutil.AmountMilliBCH))
-	fmt.Println("Satoshi to MicroBCH:", amount.Format(btcutil.AmountMicroBCH))
-	fmt.Println("Satoshi to Satoshi:", amount.Format(btcutil.AmountSatoshi))
+	fmt.Println("Satoshi to MilliBCH:", amount.Format(cashutil.AmountMilliBCH))
+	fmt.Println("Satoshi to MicroBCH:", amount.Format(cashutil.AmountMicroBCH))
+	fmt.Println("Satoshi to Satoshi:", amount.Format(cashutil.AmountSatoshi))
 
 	// Output:
 	// Satoshi to kBCH: 444.333222111 kBCH

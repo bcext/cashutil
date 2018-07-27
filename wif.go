@@ -2,16 +2,16 @@
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-package btcutil
+package cashutil
 
 import (
 	"bytes"
 	"errors"
 
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcutil/base58"
+	"github.com/bcext/gcash/btcec"
+	"github.com/bcext/gcash/chaincfg"
+	"github.com/bcext/gcash/chaincfg/chainhash"
+	"github.com/bcext/cashutil/base58"
 )
 
 // ErrMalformedPrivateKey describes an error where a WIF-encoded private

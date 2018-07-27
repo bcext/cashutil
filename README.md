@@ -1,34 +1,34 @@
-btcutil
+cashutil
 =======
 
-[![Build Status](http://img.shields.io/travis/btcsuite/btcutil.svg)](https://travis-ci.org/btcsuite/btcutil)
-[![Coverage Status](http://img.shields.io/coveralls/btcsuite/btcutil.svg)](https://coveralls.io/r/btcsuite/btcutil?branch=master)
+[![Build Status](http://img.shields.io/travis/bcext/cashutil.svg)](https://travis-ci.org/bcext/cashutil)
+[![Coverage Status](http://img.shields.io/coveralls/bcext/cashutil.svg)](https://coveralls.io/r/bcext/cashutil?branch=master)
 [![ISC License](http://img.shields.io/badge/license-ISC-blue.svg)](http://copyfree.org)
-[![GoDoc](http://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/btcsuite/btcutil)
+[![GoDoc](http://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/bcext/cashutil)
 
-Package btcutil provides bitcoin-specific convenience functions and types.
+Package cashutil provides bitcoin-specific convenience functions and types.
 A comprehensive suite of tests is provided to ensure proper functionality.  See
 `test_coverage.txt` for the gocov coverage report.  Alternatively, if you are
 running a POSIX OS, you can run the `cov_report.sh` script for a real-time
 report.
 
-This package was developed for btcd, an alternative full-node implementation of
+This package was developed for gcash, an alternative full-node implementation of
 bitcoin which is under active development by Conformal.  Although it was
-primarily written for btcd, this package has intentionally been designed so it
+primarily written for gcash, this package has intentionally been designed so it
 can be used as a standalone package for any projects needing the functionality
 provided.
 
 ## Installation and Updating
 
 ```bash
-$ go get -u github.com/btcsuite/btcutil
+$ go get -u github.com/bcext/cashutil
 ```
 
 ## GPG Verification Key
 
 All official release tags are signed by Conformal so users can ensure the code
-has not been tampered with and is coming from the btcsuite developers.  To
-verify the signature perform the following:
+has not been tampered with and is coming from the btcsuite and bcext developers.
+To verify the signature perform the following:
 
 - Download the public key from the Conformal website at
   https://opensource.conformal.com/GIT-GPG-KEY-conformal.txt
@@ -46,5 +46,5 @@ verify the signature perform the following:
 
 ## License
 
-Package btcutil is licensed under the [copyfree](http://copyfree.org) ISC
+Package cashutil is licensed under the [copyfree](http://copyfree.org) ISC
 License.

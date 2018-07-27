@@ -3,15 +3,15 @@
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-package btcutil
+package cashutil
 
 import (
 	"encoding/hex"
 	"errors"
 
-	"github.com/btcsuite/btcd/btcec"
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcutil/base58"
+	"github.com/bcext/cashutil/base58"
+	"github.com/bcext/gcash/btcec"
+	"github.com/bcext/gcash/chaincfg"
 	"golang.org/x/crypto/ripemd160"
 )
 
