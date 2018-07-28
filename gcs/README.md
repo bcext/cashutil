@@ -1,8 +1,8 @@
 gcs
 ==========
 
-[![Build Status](http://img.shields.io/travis/btcsuite/cashutil.svg)]
-(https://travis-ci.org/btcsuite/cashutil) [![ISC License]
+[![Build Status](http://img.shields.io/travis/bcext/cashutil.svg)]
+(https://travis-ci.org/bcext/cashutil) [![ISC License]
 (http://img.shields.io/badge/license-ISC-blue.svg)](http://copyfree.org)
 [![GoDoc](https://godoc.org/github.com/bcext/cashutil/gcs?status.png)]
 (http://godoc.org/github.com/bcext/cashutil/gcs)

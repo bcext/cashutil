@@ -1,7 +1,7 @@
 hdkeychain
 ==========
 
-[![Build Status](http://img.shields.io/travis/btcsuite/cashutil.svg)](https://travis-ci.org/btcsuite/cashutil)
+[![Build Status](http://img.shields.io/travis/bcext/cashutil.svg)](https://travis-ci.org/bcext/cashutil)
 [![ISC License](http://img.shields.io/badge/license-ISC-blue.svg)](http://copyfree.org)
 [![GoDoc](http://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/bcext/cashutil/hdkeychain)
 

@@ -1,7 +1,7 @@
 bech32
 ==========
 
-[![Build Status](http://img.shields.io/travis/btcsuite/cashutil.svg)](https://travis-ci.org/btcsuite/cashutil)
+[![Build Status](http://img.shields.io/travis/bcext/cashutil.svg)](https://travis-ci.org/bcext/cashutil)
 [![ISC License](http://img.shields.io/badge/license-ISC-blue.svg)](http://copyfree.org)
 [![GoDoc](https://godoc.org/github.com/bcext/cashutil/bech32?status.png)](http://godoc.org/github.com/bcext/cashutil/bech32)
 
