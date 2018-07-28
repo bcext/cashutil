@@ -13,8 +13,8 @@ interface. The functions are only exported while the tests are being run.
 package cashutil
 
 import (
-	"github.com/bcext/gcash/btcec"
 	"github.com/bcext/cashutil/base58"
+	"github.com/bcext/gcash/btcec"
 	"golang.org/x/crypto/ripemd160"
 )
 

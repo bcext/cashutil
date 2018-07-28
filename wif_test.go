@@ -7,9 +7,9 @@ package cashutil_test
 import (
 	"testing"
 
+	. "github.com/bcext/cashutil"
 	"github.com/bcext/gcash/btcec"
 	"github.com/bcext/gcash/chaincfg"
-	. "github.com/bcext/cashutil"
 )
 
 func TestEncodeDecodeWIF(t *testing.T) {

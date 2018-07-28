@@ -9,9 +9,9 @@ import (
 	"errors"
 	"sort"
 
+	"github.com/bcext/cashutil"
 	"github.com/bcext/gcash/chaincfg/chainhash"
 	"github.com/bcext/gcash/wire"
-	"github.com/bcext/cashutil"
 )
 
 // Coin represents a spendable transaction outpoint

@@ -18,11 +18,11 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/bcext/cashutil"
+	"github.com/bcext/cashutil/base58"
 	"github.com/bcext/gcash/btcec"
 	"github.com/bcext/gcash/chaincfg"
 	"github.com/bcext/gcash/chaincfg/chainhash"
-	"github.com/bcext/cashutil"
-	"github.com/bcext/cashutil/base58"
 )
 
 const (

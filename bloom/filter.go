@@ -9,10 +9,10 @@ import (
 	"math"
 	"sync"
 
-	"github.com/bcext/gcash/txscript"
-	"github.com/bcext/gcash/chaincfg/chainhash"
-	"github.com/bcext/gcash/wire"
 	"github.com/bcext/cashutil"
+	"github.com/bcext/gcash/chaincfg/chainhash"
+	"github.com/bcext/gcash/txscript"
+	"github.com/bcext/gcash/wire"
 )
 
 // ln2Squared is simply the square of the natural log of 2.

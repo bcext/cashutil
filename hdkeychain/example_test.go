@@ -7,8 +7,8 @@ package hdkeychain_test
 import (
 	"fmt"
 
-	"github.com/bcext/gcash/chaincfg"
 	"github.com/bcext/cashutil/hdkeychain"
+	"github.com/bcext/gcash/chaincfg"
 )
 
 // This example demonstrates how to generate a cryptographically random seed

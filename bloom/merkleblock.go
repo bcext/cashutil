@@ -5,10 +5,10 @@
 package bloom
 
 import (
+	"github.com/bcext/cashutil"
 	"github.com/bcext/gcash/blockchain"
 	"github.com/bcext/gcash/chaincfg/chainhash"
 	"github.com/bcext/gcash/wire"
-	"github.com/bcext/cashutil"
 )
 
 // merkleBlock is used to house intermediate information needed to generate a
