@@ -10,7 +10,7 @@ import (
 )
 
 func CashAddrDecode(str string) (string, []byte) {
-	return Decode(str, "")
+	return decode(str, "")
 }
 
 func CaseInsensitiveEqual(s1 string, s2 string) bool {
@@ -50,7 +50,7 @@ func TestVectorsValid(t *testing.T) {
 		if len(prefix) == 0 {
 			t.Errorf("cashaddr: %s should not be decoded  empty", str)
 		}
-		recode := Encode(prefix, payload)
+		recode := encode(prefix, payload)
 		if len(recode) == 0 {
 			t.Error("encode cashaddr should not be empty")
 		}
@@ -87,15 +87,15 @@ func TestRawEncode(t *testing.T) {
 	prefix := "helloworld"
 	payload := []byte{0x1f, 0x0d}
 
-	encode := Encode(prefix, payload)
+	encode := encode(prefix, payload)
 	decodedPrefix, decodedPayload := CashAddrDecode(encode)
 
 	if prefix != decodedPrefix {
-		t.Error("Encode() and Decode() are not matched!")
+		t.Error("encode() and Decode() are not matched!")
 	}
 
 	if !bytes.Equal(payload, decodedPayload) {
-		t.Error("Encode() and Decode() are not matched!")
+		t.Error("encode() and Decode() are not matched!")
 	}
 }
 
@@ -117,12 +117,12 @@ func TestVectorsNoPrefix(t *testing.T) {
 
 	for _, item := range cases {
 		addr := item.prefix + ":" + item.payload
-		prefix, payload := Decode(item.payload, item.prefix)
+		prefix, payload := decode(item.payload, item.prefix)
 		if !CaseInsensitiveEqual(prefix, item.prefix) {
 			t.Errorf("cashaddr prefix: %s decode error", item.prefix)
 		}
 
-		recode := Encode(prefix, payload)
+		recode := encode(prefix, payload)
 		if len(recode) == 0 {
 			t.Errorf("cashaddr: %s encode error", addr)
 		}

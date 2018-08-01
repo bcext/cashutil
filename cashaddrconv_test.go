@@ -37,7 +37,7 @@ func InsecureGetRandomByteArray(size int) []byte {
 	return ret
 }
 
-func PackCashAddrContent(content *AddrContent) []byte {
+func PackCashaddrContent(content *addrContent) []byte {
 	return packAddrData(content.hash, uint8(content.t))
 }
 
@@ -45,17 +45,17 @@ func TestEncodeDecodeAllSizes(t *testing.T) {
 	param := &chaincfg.MainNetParams
 	for size1, size2 := range validSizes {
 		data := InsecureGetRandomByteArray(size2)
-		content := AddrContent{PubKeyType, data}
-		packedData := PackCashAddrContent(&content)
+		content := addrContent{pubKeyType, data}
+		packedData := PackCashaddrContent(&content)
 
 		// Check that the packed size is correct
 		if int(packedData[1]>>2) != size1 {
 			t.Error("the packed size is incorrect")
 		}
 
-		addr := Encode(param.CashAddrPrefix, packedData)
+		addr := encode(param.CashAddrPrefix, packedData)
 		// Check that the address decodes properly
-		decode := decodeCashAddrContent(addr, param)
+		decode := decodeCashaddrContent(addr, param)
 		if !bytes.Equal(content.hash, decode.hash) {
 			t.Error("cashaddr encode or decode error")
 		}
@@ -65,7 +65,7 @@ func TestEncodeDecodeAllSizes(t *testing.T) {
 func TestCheckPackAddr(t *testing.T) {
 	for _, size2 := range validSizes {
 		data := InsecureGetRandomByteArray(size2 - 1)
-		content := AddrContent{PubKeyType, data}
+		content := addrContent{pubKeyType, data}
 
 		defer func() {
 			if r := recover(); r != nil {
@@ -73,7 +73,7 @@ func TestCheckPackAddr(t *testing.T) {
 			}
 		}()
 
-		PackCashAddrContent(&content) // error length causes panic
+		PackCashaddrContent(&content) // error length causes panic
 		t.Error("addr pack error")
 	}
 }
@@ -106,8 +106,8 @@ func TestEncodeDecode(t *testing.T) {
 		if err != nil {
 			panic(err)
 		}
-		encode := EncodeCashAddr(dst, net)
-		decode, err := DecodeCashAddr(encode, net)
+		encode := dst.EncodeAddress(true)
+		decode, err := decodeCashAddr(encode, net)
 		if err != nil || decode.String() != dst.String() {
 			t.Error("encode or decode error")
 		}
@@ -119,8 +119,8 @@ func TestEncodeDecode(t *testing.T) {
 		if err != nil {
 			panic(err)
 		}
-		encode := EncodeCashAddr(dst, net)
-		decode, err := DecodeCashAddr(encode, net)
+		encode := dst.EncodeAddress(true)
+		decode, err := decodeCashAddr(encode, net)
 		if err != nil || decode.String() != dst.String() {
 			t.Error("encode or decode error")
 		}
@@ -139,12 +139,12 @@ func TestInvalidOnWrongNetwork(t *testing.T) {
 			if net == otherNet {
 				continue
 			}
-			pubKeyHashAddr, err := NewAddressPubKeyHash(b20, &chaincfg.MainNetParams)
+			pubKeyHashAddr, err := NewAddressPubKeyHash(b20, net)
 			if err != nil {
 				panic(err)
 			}
-			encoded := EncodeCashAddr(pubKeyHashAddr, net)
-			decoded, _ := DecodeCashAddr(encoded, otherNet)
+			encoded := pubKeyHashAddr.EncodeAddress(true)
+			decoded, _ := decodeCashAddr(encoded, otherNet)
 
 			if decoded != nil {
 				t.Error("the decoded address should be nil as to incorrect network")
@@ -163,15 +163,15 @@ func TestRandomDst(t *testing.T) {
 		if err != nil {
 			panic(err)
 		}
-		encodedKey := EncodeCashAddr(pubKeyDst, param)
-		decodedKey, err1 := DecodeCashAddr(encodedKey, param)
+		encodedKey := pubKeyDst.EncodeAddress(true)
+		decodedKey, err1 := decodeCashAddr(encodedKey, param)
 
 		scriptHashDst, err := NewAddressScriptHashFromHash(hash, param)
 		if err != nil {
 			panic(err)
 		}
-		encodedSrc := EncodeCashAddr(scriptHashDst, param)
-		decodedSrc, err2 := DecodeCashAddr(encodedSrc, param)
+		encodedSrc := scriptHashDst.EncodeAddress(true)
+		decodedSrc, err2 := decodeCashAddr(encodedSrc, param)
 
 		errString := fmt.Sprintf("cashaddr failed for hash: %s", hex.EncodeToString(hash))
 		if err1 != nil || pubKeyDst.String() != decodedKey.String() {
@@ -200,8 +200,8 @@ func TestCheckPadding(t *testing.T) {
 	originBytes := data.Bytes()
 	for i := 0; i < 32; i++ {
 		originBytes[len(originBytes)-1] = byte(i)
-		fake := Encode(param.CashAddrPrefix, originBytes)
-		dst, _ := DecodeCashAddr(fake, param)
+		fake := encode(param.CashAddrPrefix, originBytes)
+		dst, _ := decodeCashAddr(fake, param)
 
 		// We have 168 bits of payload encoded as 170 bits in 5 bits nimbles. As
 		// a result, we must have 2 zeros.
@@ -226,8 +226,8 @@ func TestCheckType(t *testing.T) {
 	originBytes := data.Bytes()
 	for i := byte(0); i < 16; i++ {
 		originBytes[0] = i
-		content := decodeCashAddrContent(Encode(param.CashAddrPrefix, originBytes), param)
-		if content.t != AddrType(i) {
+		content := decodeCashaddrContent(encode(param.CashAddrPrefix, originBytes), param)
+		if content.t != addrType(i) {
 			t.Error("type error")
 		}
 		if len(content.hash) != 20 {
@@ -236,7 +236,7 @@ func TestCheckType(t *testing.T) {
 
 		// Check that using the reserved bit result in a failure.
 		originBytes[0] |= 0x10
-		content = decodeCashAddrContent(Encode(param.CashAddrPrefix, originBytes), param)
+		content = decodeCashaddrContent(encode(param.CashAddrPrefix, originBytes), param)
 		if content != nil && content.t != 0 {
 			t.Error("type error")
 		}
@@ -259,9 +259,9 @@ func TestCheckSize(t *testing.T) {
 		// After conversion from 8 bit packing to 5 bit packing, the size will
 		// be in the second 5-bit group, shifted left twice.
 		data[1] = byte(size1 << 2)
-		content := decodeCashAddrContent(Encode(param.CashAddrPrefix, data), param)
+		content := decodeCashaddrContent(encode(param.CashAddrPrefix, data), param)
 		if content != nil {
-			if content.t != AddrType(0) {
+			if content.t != addrType(0) {
 				t.Error("error")
 			}
 
@@ -271,9 +271,9 @@ func TestCheckSize(t *testing.T) {
 		}
 
 		data = bytes.Repeat([]byte{0}, expectedSize+1)
-		content = decodeCashAddrContent(Encode(param.CashAddrPrefix, data), param)
+		content = decodeCashaddrContent(encode(param.CashAddrPrefix, data), param)
 		if content != nil {
-			if content.t != AddrType(0) {
+			if content.t != addrType(0) {
 				t.Error("error")
 			}
 			if len(content.hash) != 0 {
@@ -282,9 +282,9 @@ func TestCheckSize(t *testing.T) {
 		}
 
 		data = data[:len(data)-2]
-		content = decodeCashAddrContent(Encode(param.CashAddrPrefix, data), param)
+		content = decodeCashaddrContent(encode(param.CashAddrPrefix, data), param)
 		if content != nil {
-			if content.t != AddrType(0) {
+			if content.t != addrType(0) {
 				t.Error("error")
 			}
 			if len(content.hash) != 0 {
@@ -321,7 +321,7 @@ func TestCashAddresses(t *testing.T) {
 		if err != nil {
 			panic(err)
 		}
-		if EncodeCashAddr(dstKey, param) != pubkey[index] {
+		if dstKey.EncodeAddress(true) != pubkey[index] {
 			t.Error("encode bitcoin pubKeyHash address error")
 		}
 
@@ -330,7 +330,7 @@ func TestCashAddresses(t *testing.T) {
 		if err != nil {
 			panic(err)
 		}
-		if EncodeCashAddr(dstScript, param) != script[index] {
+		if dstScript.EncodeAddress(true) != script[index] {
 			t.Error("encode bitcoin scriptHash address error")
 		}
 	}

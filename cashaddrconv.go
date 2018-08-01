@@ -12,47 +12,47 @@ import (
 	"github.com/bcext/gcash/chaincfg"
 )
 
-type AddrType uint8
+type addrType uint8
 
 const (
-	PubKeyType AddrType = iota
-	ScriptType
+	pubKeyType addrType = iota
+	scriptType
 )
 
 var (
-	emptyAddressContent = errors.New("empty address content")
-	invalidHash160Size  = errors.New("invalid hash160 size")
-	invalidAddressType  = errors.New("invalid address type")
+	errEmptyAddressContent = errors.New("empty address content")
+	errInvalidHash160Size  = errors.New("invalid hash160 size")
+	errInvalidAddressType  = errors.New("invalid address type")
 )
 
-type AddrContent struct {
-	t    AddrType
+type addrContent struct {
+	t    addrType
 	hash []byte
 }
 
-func EncodeCashAddr(dst Address, param *chaincfg.Params) string {
+func encodeCashAddr(dst Address) string {
 	switch addr := dst.(type) {
 	case *AddressPubKeyHash:
-		data := packAddrData(addr.Hash160()[:], uint8(PubKeyType))
-		return Encode(param.CashAddrPrefix, data)
+		data := packAddrData(addr.Hash160()[:], uint8(pubKeyType))
+		return encode(addr.net.CashAddrPrefix, data)
 	case *AddressScriptHash:
-		data := packAddrData(addr.Hash160()[:], uint8(ScriptType))
-		return Encode(param.CashAddrPrefix, data)
+		data := packAddrData(addr.Hash160()[:], uint8(scriptType))
+		return encode(addr.net.CashAddrPrefix, data)
 	default:
 		return ""
 	}
 }
 
-func DecodeCashAddr(addr string, param *chaincfg.Params) (Address, error) {
+func decodeCashAddr(addr string, param *chaincfg.Params) (Address, error) {
 	// handle bitcoin address prefixed with net tag
 	if strings.Contains(addr, ":") {
 		pos := strings.LastIndex(addr, ":")
 		addr = addr[pos+1:]
 	}
 
-	content := decodeCashAddrContent(addr, param)
+	content := decodeCashaddrContent(addr, param)
 	if content == nil || len(content.hash) == 0 {
-		return nil, emptyAddressContent
+		return nil, errEmptyAddressContent
 	}
 
 	return decodeCashAddrDestination(content, param)
@@ -60,7 +60,7 @@ func DecodeCashAddr(addr string, param *chaincfg.Params) (Address, error) {
 
 // Convert the data part to a 5 bit representation.
 func packAddrData(id []byte, t uint8) []byte {
-	version := uint8(t << 3)
+	version := t << 3
 	size := len(id)
 	var encodedSize uint8
 	switch size * 8 {
@@ -126,8 +126,8 @@ func convertBits(frombits uint, tobits uint, pad bool, data []byte) ([]byte, boo
 	return ret.Bytes(), true
 }
 
-func decodeCashAddrContent(addr string, param *chaincfg.Params) *AddrContent {
-	prefix, payload := Decode(addr, param.CashAddrPrefix)
+func decodeCashaddrContent(addr string, param *chaincfg.Params) *addrContent {
+	prefix, payload := decode(addr, param.CashAddrPrefix)
 	if prefix != param.CashAddrPrefix {
 		return nil
 	}
@@ -159,7 +159,7 @@ func decodeCashAddrContent(addr string, param *chaincfg.Params) *AddrContent {
 		return nil
 	}
 
-	t := AddrType((version >> 3) & 0x1f)
+	t := addrType((version >> 3) & 0x1f)
 	hashSize := 20 + 4*(version&0x03)
 	if version&0x04 != 0 {
 		hashSize *= 2
@@ -173,28 +173,28 @@ func decodeCashAddrContent(addr string, param *chaincfg.Params) *AddrContent {
 	// Pop the version.
 	data = data[1:]
 
-	return &AddrContent{t, data}
+	return &addrContent{t, data}
 }
 
-func decodeCashAddrDestination(content *AddrContent, params *chaincfg.Params) (Address, error) {
+func decodeCashAddrDestination(content *addrContent, params *chaincfg.Params) (Address, error) {
 	if len(content.hash) != 20 {
-		return nil, invalidHash160Size
+		return nil, errInvalidHash160Size
 	}
 
 	switch content.t {
-	case PubKeyType:
+	case pubKeyType:
 		addr, err := NewAddressPubKeyHash(content.hash, params)
 		if err != nil {
 			return nil, err
 		}
 		return addr, nil
-	case ScriptType:
+	case scriptType:
 		addr, err := NewAddressScriptHashFromHash(content.hash, params)
 		if err != nil {
 			return nil, err
 		}
 		return addr, nil
 	default:
-		return nil, invalidAddressType
+		return nil, errInvalidAddressType
 	}
 }

@@ -574,7 +574,7 @@ func TestExtendedKeyAPI(t *testing.T) {
 			parentFP:  0,
 			privKey:   "e8f32e723decf4051aefac8e2c93c9c5b214313817cdb01a1494b917c8436b35",
 			pubKey:    "0339a36013301597daef41fbe593a02cc513d0b55527ec2df1050e2e8ff49c85c2",
-			address:   "15mKKb2eos1hWa6tisdPwwDC1a5J1y9nma",
+			address:   "bitcoincash:qq6yyxf7rwmsj9hfz32jzukdfckme80czyn2pwwpfn",
 		},
 		{
 			name:       "test vector 1 chain m/0H/1/2H public",
@@ -583,7 +583,7 @@ func TestExtendedKeyAPI(t *testing.T) {
 			parentFP:   3203769081,
 			privKeyErr: ErrNotPrivExtKey,
 			pubKey:     "0357bfe1e341d01c69fe5654309956cbea516822fba8a601743a012a7896ee8dc2",
-			address:    "1NjxqbA9aZWnh17q1UW3rB4EPu79wDXj7x",
+			address:    "bitcoincash:qrh84wgvmet23s8zhvyx43yhfzudh8wwwg9y95zk2p",
 		},
 	}
 
@@ -654,10 +654,10 @@ func TestExtendedKeyAPI(t *testing.T) {
 				test.name, err)
 			continue
 		}
-		if addr.EncodeAddress() != test.address {
+		if addr.EncodeAddress(true) != test.address {
 			t.Errorf("Address #%d (%s): mismatched address -- want "+
 				"%s, got %s", i, test.name, test.address,
-				addr.EncodeAddress())
+				addr.EncodeAddress(true))
 			continue
 		}
 	}
@@ -959,17 +959,17 @@ func TestZero(t *testing.T) {
 			return false
 		}
 
-		wantAddr := "1HT7xU2Ngenf7D4yocz2SAcnNLW7rK8d4E"
+		wantAddr := "bitcoincash:qz689gnx6z7cnsfhq6jpxtx0k9hhcwulevraunu2dj"
 		addr, err := key.Address(&chaincfg.MainNetParams)
 		if err != nil {
 			t.Errorf("Addres s #%d (%s): unexpected error: %v", i,
 				testName, err)
 			return false
 		}
-		if addr.EncodeAddress() != wantAddr {
+		if addr.EncodeAddress(true) != wantAddr {
 			t.Errorf("Address #%d (%s): mismatched address -- want "+
 				"%s, got %s", i, testName, wantAddr,
-				addr.EncodeAddress())
+				addr.EncodeAddress(true))
 			return false
 		}
 

@@ -30,14 +30,14 @@ func TestAddresses(t *testing.T) {
 		// Positive P2PKH tests.
 		{
 			name:    "mainnet p2pkh",
-			addr:    "1MirQ9bwyQcGVJPwKUgapu5ouK2E2Ey4gX",
-			encoded: "1MirQ9bwyQcGVJPwKUgapu5ouK2E2Ey4gX",
+			addr:    "bitcoincash:qr35ennsep3hxfe7lnz5ee7j5jgmkjswssk2puzvgv",
+			encoded: "bitcoincash:qr35ennsep3hxfe7lnz5ee7j5jgmkjswssk2puzvgv",
 			valid:   true,
 			result: cashutil.TstAddressPubKeyHash(
 				[ripemd160.Size]byte{
 					0xe3, 0x4c, 0xce, 0x70, 0xc8, 0x63, 0x73, 0x27, 0x3e, 0xfc,
 					0xc5, 0x4c, 0xe7, 0xd2, 0xa4, 0x91, 0xbb, 0x4a, 0x0e, 0x84},
-				chaincfg.MainNetParams.PubKeyHashAddrID),
+				&chaincfg.MainNetParams),
 			f: func() (cashutil.Address, error) {
 				pkHash := []byte{
 					0xe3, 0x4c, 0xce, 0x70, 0xc8, 0x63, 0x73, 0x27, 0x3e, 0xfc,
@@ -48,14 +48,14 @@ func TestAddresses(t *testing.T) {
 		},
 		{
 			name:    "mainnet p2pkh 2",
-			addr:    "12MzCDwodF9G1e7jfwLXfR164RNtx4BRVG",
-			encoded: "12MzCDwodF9G1e7jfwLXfR164RNtx4BRVG",
+			addr:    "bitcoincash:qq80qvqs0lfxuzmt7sz3909ze6camq9d4gxau4gyg4",
+			encoded: "bitcoincash:qq80qvqs0lfxuzmt7sz3909ze6camq9d4gxau4gyg4",
 			valid:   true,
 			result: cashutil.TstAddressPubKeyHash(
 				[ripemd160.Size]byte{
 					0x0e, 0xf0, 0x30, 0x10, 0x7f, 0xd2, 0x6e, 0x0b, 0x6b, 0xf4,
 					0x05, 0x12, 0xbc, 0xa2, 0xce, 0xb1, 0xdd, 0x80, 0xad, 0xaa},
-				chaincfg.MainNetParams.PubKeyHashAddrID),
+				&chaincfg.MainNetParams),
 			f: func() (cashutil.Address, error) {
 				pkHash := []byte{
 					0x0e, 0xf0, 0x30, 0x10, 0x7f, 0xd2, 0x6e, 0x0b, 0x6b, 0xf4,
@@ -66,14 +66,14 @@ func TestAddresses(t *testing.T) {
 		},
 		{
 			name:    "testnet p2pkh",
-			addr:    "mrX9vMRYLfVy1BnZbc5gZjuyaqH3ZW2ZHz",
-			encoded: "mrX9vMRYLfVy1BnZbc5gZjuyaqH3ZW2ZHz",
+			addr:    "bchtest:qputx94qseratdmjs0j395mq8u03er0x3uh3vccxa2",
+			encoded: "bchtest:qputx94qseratdmjs0j395mq8u03er0x3uh3vccxa2",
 			valid:   true,
 			result: cashutil.TstAddressPubKeyHash(
 				[ripemd160.Size]byte{
 					0x78, 0xb3, 0x16, 0xa0, 0x86, 0x47, 0xd5, 0xb7, 0x72, 0x83,
 					0xe5, 0x12, 0xd3, 0x60, 0x3f, 0x1f, 0x1c, 0x8d, 0xe6, 0x8f},
-				chaincfg.TestNet3Params.PubKeyHashAddrID),
+				&chaincfg.TestNet3Params),
 			f: func() (cashutil.Address, error) {
 				pkHash := []byte{
 					0x78, 0xb3, 0x16, 0xa0, 0x86, 0x47, 0xd5, 0xb7, 0x72, 0x83,
@@ -110,14 +110,14 @@ func TestAddresses(t *testing.T) {
 			// output: 3c9018e8d5615c306d72397f8f5eef44308c98fb576a88e030c25456b4f3a7ac
 			// input:  837dea37ddc8b1e3ce646f1a656e79bbd8cc7f558ac56a169626d649ebe2a3ba.
 			name:    "mainnet p2sh",
-			addr:    "3QJmV3qfvL9SuYo34YihAf3sRCW3qSinyC",
-			encoded: "3QJmV3qfvL9SuYo34YihAf3sRCW3qSinyC",
+			addr:    "bitcoincash:pruptvpkmxamee0f72sq40gm70wfr624zq0yyxtycm",
+			encoded: "bitcoincash:pruptvpkmxamee0f72sq40gm70wfr624zq0yyxtycm",
 			valid:   true,
 			result: cashutil.TstAddressScriptHash(
 				[ripemd160.Size]byte{
 					0xf8, 0x15, 0xb0, 0x36, 0xd9, 0xbb, 0xbc, 0xe5, 0xe9, 0xf2,
 					0xa0, 0x0a, 0xbd, 0x1b, 0xf3, 0xdc, 0x91, 0xe9, 0x55, 0x10},
-				chaincfg.MainNetParams.ScriptHashAddrID),
+				&chaincfg.MainNetParams),
 			f: func() (cashutil.Address, error) {
 				script := []byte{
 					0x52, 0x41, 0x04, 0x91, 0xbb, 0xa2, 0x51, 0x09, 0x12, 0xa5,
@@ -150,14 +150,14 @@ func TestAddresses(t *testing.T) {
 			// output: b0539a45de13b3e0403909b8bd1a555b8cbe45fd4e3f3fda76f3a5f52835c29d
 			// input: (not yet redeemed at time test was written)
 			name:    "mainnet p2sh 2",
-			addr:    "3NukJ6fYZJ5Kk8bPjycAnruZkE5Q7UW7i8",
-			encoded: "3NukJ6fYZJ5Kk8bPjycAnruZkE5Q7UW7i8",
+			addr:    "bitcoincash:pr5vxqxg0xrwl2zvxlq9rxffqx00sm44ks62zuqyrj",
+			encoded: "bitcoincash:pr5vxqxg0xrwl2zvxlq9rxffqx00sm44ks62zuqyrj",
 			valid:   true,
 			result: cashutil.TstAddressScriptHash(
 				[ripemd160.Size]byte{
 					0xe8, 0xc3, 0x00, 0xc8, 0x79, 0x86, 0xef, 0xa8, 0x4c, 0x37,
 					0xc0, 0x51, 0x99, 0x29, 0x01, 0x9e, 0xf8, 0x6e, 0xb5, 0xb4},
-				chaincfg.MainNetParams.ScriptHashAddrID),
+				&chaincfg.MainNetParams),
 			f: func() (cashutil.Address, error) {
 				hash := []byte{
 					0xe8, 0xc3, 0x00, 0xc8, 0x79, 0x86, 0xef, 0xa8, 0x4c, 0x37,
@@ -169,14 +169,14 @@ func TestAddresses(t *testing.T) {
 		{
 			// Taken from bitcoind base58_keys_valid.
 			name:    "testnet p2sh",
-			addr:    "2NBFNJTktNa7GZusGbDbGKRZTxdK9VVez3n",
-			encoded: "2NBFNJTktNa7GZusGbDbGKRZTxdK9VVez3n",
+			addr:    "bchtest:przhjdpv93xfygpqtckdc2zkzuzqeyj2pg4x8klehh",
+			encoded: "bchtest:przhjdpv93xfygpqtckdc2zkzuzqeyj2pg4x8klehh",
 			valid:   true,
 			result: cashutil.TstAddressScriptHash(
 				[ripemd160.Size]byte{
 					0xc5, 0x79, 0x34, 0x2c, 0x2c, 0x4c, 0x92, 0x20, 0x20, 0x5e,
 					0x2c, 0xdc, 0x28, 0x56, 0x17, 0x04, 0x0c, 0x92, 0x4a, 0x0a},
-				chaincfg.TestNet3Params.ScriptHashAddrID),
+				&chaincfg.TestNet3Params),
 			f: func() (cashutil.Address, error) {
 				hash := []byte{
 					0xc5, 0x79, 0x34, 0x2c, 0x2c, 0x4c, 0x92, 0x20, 0x20, 0x5e,
@@ -205,7 +205,7 @@ func TestAddresses(t *testing.T) {
 		{
 			name:    "mainnet p2pk compressed (0x02)",
 			addr:    "02192d74d0cb94344c9569c2e77901573d8d7903c3ebec3a957724895dca52c6b4",
-			encoded: "13CG6SJ3yHUXo4Cr2RY4THLLJrNFuG3gUg",
+			encoded: "bitcoincash:qqvpzmfl6tvh4dfnas2whw6n2lf5lh8tls55um0pvj",
 			valid:   true,
 			result: cashutil.TstAddressPubKey(
 				[]byte{
@@ -213,7 +213,7 @@ func TestAddresses(t *testing.T) {
 					0x69, 0xc2, 0xe7, 0x79, 0x01, 0x57, 0x3d, 0x8d, 0x79, 0x03,
 					0xc3, 0xeb, 0xec, 0x3a, 0x95, 0x77, 0x24, 0x89, 0x5d, 0xca,
 					0x52, 0xc6, 0xb4},
-				cashutil.PKFCompressed, chaincfg.MainNetParams.PubKeyHashAddrID),
+				cashutil.PKFCompressed, &chaincfg.MainNetParams),
 			f: func() (cashutil.Address, error) {
 				serializedPubKey := []byte{
 					0x02, 0x19, 0x2d, 0x74, 0xd0, 0xcb, 0x94, 0x34, 0x4c, 0x95,
@@ -227,7 +227,7 @@ func TestAddresses(t *testing.T) {
 		{
 			name:    "mainnet p2pk compressed (0x03)",
 			addr:    "03b0bd634234abbb1ba1e986e884185c61cf43e001f9137f23c2c409273eb16e65",
-			encoded: "15sHANNUBSh6nDp8XkDPmQcW6n3EFwmvE6",
+			encoded: "bitcoincash:qq6k9jkvklk68j6tyu7s5ghwyplww6stccfyy2gdwx",
 			valid:   true,
 			result: cashutil.TstAddressPubKey(
 				[]byte{
@@ -235,7 +235,7 @@ func TestAddresses(t *testing.T) {
 					0xe9, 0x86, 0xe8, 0x84, 0x18, 0x5c, 0x61, 0xcf, 0x43, 0xe0,
 					0x01, 0xf9, 0x13, 0x7f, 0x23, 0xc2, 0xc4, 0x09, 0x27, 0x3e,
 					0xb1, 0x6e, 0x65},
-				cashutil.PKFCompressed, chaincfg.MainNetParams.PubKeyHashAddrID),
+				cashutil.PKFCompressed, &chaincfg.MainNetParams),
 			f: func() (cashutil.Address, error) {
 				serializedPubKey := []byte{
 					0x03, 0xb0, 0xbd, 0x63, 0x42, 0x34, 0xab, 0xbb, 0x1b, 0xa1,
@@ -250,7 +250,7 @@ func TestAddresses(t *testing.T) {
 			name: "mainnet p2pk uncompressed (0x04)",
 			addr: "0411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2" +
 				"e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3",
-			encoded: "12cbQLTFMXRnSzktFkuoG3eHoMeFtpTu3S",
+			encoded: "bitcoincash:qqgmxehdls9gkeh7awh9ct3957m2t5w0xypw40ll5f",
 			valid:   true,
 			result: cashutil.TstAddressPubKey(
 				[]byte{
@@ -261,7 +261,7 @@ func TestAddresses(t *testing.T) {
 					0xf9, 0x74, 0x44, 0x64, 0xf8, 0x2e, 0x16, 0x0b, 0xfa, 0x9b,
 					0x8b, 0x64, 0xf9, 0xd4, 0xc0, 0x3f, 0x99, 0x9b, 0x86, 0x43,
 					0xf6, 0x56, 0xb4, 0x12, 0xa3},
-				cashutil.PKFUncompressed, chaincfg.MainNetParams.PubKeyHashAddrID),
+				cashutil.PKFUncompressed, &chaincfg.MainNetParams),
 			f: func() (cashutil.Address, error) {
 				serializedPubKey := []byte{
 					0x04, 0x11, 0xdb, 0x93, 0xe1, 0xdc, 0xdb, 0x8a, 0x01, 0x6b,
@@ -279,7 +279,7 @@ func TestAddresses(t *testing.T) {
 			name: "mainnet p2pk hybrid (0x06)",
 			addr: "06192d74d0cb94344c9569c2e77901573d8d7903c3ebec3a957724895dca52c6b4" +
 				"0d45264838c0bd96852662ce6a847b197376830160c6d2eb5e6a4c44d33f453e",
-			encoded: "1Ja5rs7XBZnK88EuLVcFqYGMEbBitzchmX",
+			encoded: "bitcoincash:qrqth6lcgz6gk7gq549cp3433dvg20acqsd690fzgy",
 			valid:   true,
 			result: cashutil.TstAddressPubKey(
 				[]byte{
@@ -290,7 +290,7 @@ func TestAddresses(t *testing.T) {
 					0x96, 0x85, 0x26, 0x62, 0xce, 0x6a, 0x84, 0x7b, 0x19, 0x73,
 					0x76, 0x83, 0x01, 0x60, 0xc6, 0xd2, 0xeb, 0x5e, 0x6a, 0x4c,
 					0x44, 0xd3, 0x3f, 0x45, 0x3e},
-				cashutil.PKFHybrid, chaincfg.MainNetParams.PubKeyHashAddrID),
+				cashutil.PKFHybrid, &chaincfg.MainNetParams),
 			f: func() (cashutil.Address, error) {
 				serializedPubKey := []byte{
 					0x06, 0x19, 0x2d, 0x74, 0xd0, 0xcb, 0x94, 0x34, 0x4c, 0x95,
@@ -308,7 +308,7 @@ func TestAddresses(t *testing.T) {
 			name: "mainnet p2pk hybrid (0x07)",
 			addr: "07b0bd634234abbb1ba1e986e884185c61cf43e001f9137f23c2c409273eb16e65" +
 				"37a576782eba668a7ef8bd3b3cfb1edb7117ab65129b8a2e681f3c1e0908ef7b",
-			encoded: "1ExqMmf6yMxcBMzHjbj41wbqYuqoX6uBLG",
+			encoded: "bitcoincash:qzvj3ctpect3a9rqp486fq89r07akmdwsqhnke75z5",
 			valid:   true,
 			result: cashutil.TstAddressPubKey(
 				[]byte{
@@ -319,7 +319,7 @@ func TestAddresses(t *testing.T) {
 					0x8a, 0x7e, 0xf8, 0xbd, 0x3b, 0x3c, 0xfb, 0x1e, 0xdb, 0x71,
 					0x17, 0xab, 0x65, 0x12, 0x9b, 0x8a, 0x2e, 0x68, 0x1f, 0x3c,
 					0x1e, 0x09, 0x08, 0xef, 0x7b},
-				cashutil.PKFHybrid, chaincfg.MainNetParams.PubKeyHashAddrID),
+				cashutil.PKFHybrid, &chaincfg.MainNetParams),
 			f: func() (cashutil.Address, error) {
 				serializedPubKey := []byte{
 					0x07, 0xb0, 0xbd, 0x63, 0x42, 0x34, 0xab, 0xbb, 0x1b, 0xa1,
@@ -336,7 +336,7 @@ func TestAddresses(t *testing.T) {
 		{
 			name:    "testnet p2pk compressed (0x02)",
 			addr:    "02192d74d0cb94344c9569c2e77901573d8d7903c3ebec3a957724895dca52c6b4",
-			encoded: "mhiDPVP2nJunaAgTjzWSHCYfAqxxrxzjmo",
+			encoded: "bchtest:qqvpzmfl6tvh4dfnas2whw6n2lf5lh8tlssxcudktw",
 			valid:   true,
 			result: cashutil.TstAddressPubKey(
 				[]byte{
@@ -344,7 +344,7 @@ func TestAddresses(t *testing.T) {
 					0x69, 0xc2, 0xe7, 0x79, 0x01, 0x57, 0x3d, 0x8d, 0x79, 0x03,
 					0xc3, 0xeb, 0xec, 0x3a, 0x95, 0x77, 0x24, 0x89, 0x5d, 0xca,
 					0x52, 0xc6, 0xb4},
-				cashutil.PKFCompressed, chaincfg.TestNet3Params.PubKeyHashAddrID),
+				cashutil.PKFCompressed, &chaincfg.TestNet3Params),
 			f: func() (cashutil.Address, error) {
 				serializedPubKey := []byte{
 					0x02, 0x19, 0x2d, 0x74, 0xd0, 0xcb, 0x94, 0x34, 0x4c, 0x95,
@@ -358,7 +358,7 @@ func TestAddresses(t *testing.T) {
 		{
 			name:    "testnet p2pk compressed (0x03)",
 			addr:    "03b0bd634234abbb1ba1e986e884185c61cf43e001f9137f23c2c409273eb16e65",
-			encoded: "mkPETRTSzU8MZLHkFKBmbKppxmdw9qT42t",
+			encoded: "bchtest:qq6k9jkvklk68j6tyu7s5ghwyplww6stccdkqd26f6",
 			valid:   true,
 			result: cashutil.TstAddressPubKey(
 				[]byte{
@@ -366,7 +366,7 @@ func TestAddresses(t *testing.T) {
 					0xe9, 0x86, 0xe8, 0x84, 0x18, 0x5c, 0x61, 0xcf, 0x43, 0xe0,
 					0x01, 0xf9, 0x13, 0x7f, 0x23, 0xc2, 0xc4, 0x09, 0x27, 0x3e,
 					0xb1, 0x6e, 0x65},
-				cashutil.PKFCompressed, chaincfg.TestNet3Params.PubKeyHashAddrID),
+				cashutil.PKFCompressed, &chaincfg.TestNet3Params),
 			f: func() (cashutil.Address, error) {
 				serializedPubKey := []byte{
 					0x03, 0xb0, 0xbd, 0x63, 0x42, 0x34, 0xab, 0xbb, 0x1b, 0xa1,
@@ -381,7 +381,7 @@ func TestAddresses(t *testing.T) {
 			name: "testnet p2pk uncompressed (0x04)",
 			addr: "0411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5" +
 				"cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3",
-			encoded: "mh8YhPYEAYs3E7EVyKtB5xrcfMExkkdEMF",
+			encoded: "bchtest:qqgmxehdls9gkeh7awh9ct3957m2t5w0xy9u3gagn4",
 			valid:   true,
 			result: cashutil.TstAddressPubKey(
 				[]byte{
@@ -392,7 +392,7 @@ func TestAddresses(t *testing.T) {
 					0xf9, 0x74, 0x44, 0x64, 0xf8, 0x2e, 0x16, 0x0b, 0xfa, 0x9b,
 					0x8b, 0x64, 0xf9, 0xd4, 0xc0, 0x3f, 0x99, 0x9b, 0x86, 0x43,
 					0xf6, 0x56, 0xb4, 0x12, 0xa3},
-				cashutil.PKFUncompressed, chaincfg.TestNet3Params.PubKeyHashAddrID),
+				cashutil.PKFUncompressed, &chaincfg.TestNet3Params),
 			f: func() (cashutil.Address, error) {
 				serializedPubKey := []byte{
 					0x04, 0x11, 0xdb, 0x93, 0xe1, 0xdc, 0xdb, 0x8a, 0x01, 0x6b,
@@ -410,7 +410,7 @@ func TestAddresses(t *testing.T) {
 			name: "testnet p2pk hybrid (0x06)",
 			addr: "06192d74d0cb94344c9569c2e77901573d8d7903c3ebec3a957724895dca52c6b" +
 				"40d45264838c0bd96852662ce6a847b197376830160c6d2eb5e6a4c44d33f453e",
-			encoded: "my639vCVzbDZuEiX44adfTUg6anRomZLEP",
+			encoded: "bchtest:qrqth6lcgz6gk7gq549cp3433dvg20acqsfgpgt40c",
 			valid:   true,
 			result: cashutil.TstAddressPubKey(
 				[]byte{
@@ -421,7 +421,7 @@ func TestAddresses(t *testing.T) {
 					0x96, 0x85, 0x26, 0x62, 0xce, 0x6a, 0x84, 0x7b, 0x19, 0x73,
 					0x76, 0x83, 0x01, 0x60, 0xc6, 0xd2, 0xeb, 0x5e, 0x6a, 0x4c,
 					0x44, 0xd3, 0x3f, 0x45, 0x3e},
-				cashutil.PKFHybrid, chaincfg.TestNet3Params.PubKeyHashAddrID),
+				cashutil.PKFHybrid, &chaincfg.TestNet3Params),
 			f: func() (cashutil.Address, error) {
 				serializedPubKey := []byte{
 					0x06, 0x19, 0x2d, 0x74, 0xd0, 0xcb, 0x94, 0x34, 0x4c, 0x95,
@@ -439,7 +439,7 @@ func TestAddresses(t *testing.T) {
 			name: "testnet p2pk hybrid (0x07)",
 			addr: "07b0bd634234abbb1ba1e986e884185c61cf43e001f9137f23c2c409273eb16e6" +
 				"537a576782eba668a7ef8bd3b3cfb1edb7117ab65129b8a2e681f3c1e0908ef7b",
-			encoded: "muUnepk5nPPrxUTuTAhRqrpAQuSWS5fVii",
+			encoded: "bchtest:qzvj3ctpect3a9rqp486fq89r07akmdwsqnpj7ur9g",
 			valid:   true,
 			result: cashutil.TstAddressPubKey(
 				[]byte{
@@ -450,7 +450,7 @@ func TestAddresses(t *testing.T) {
 					0x8a, 0x7e, 0xf8, 0xbd, 0x3b, 0x3c, 0xfb, 0x1e, 0xdb, 0x71,
 					0x17, 0xab, 0x65, 0x12, 0x9b, 0x8a, 0x2e, 0x68, 0x1f, 0x3c,
 					0x1e, 0x09, 0x08, 0xef, 0x7b},
-				cashutil.PKFHybrid, chaincfg.TestNet3Params.PubKeyHashAddrID),
+				cashutil.PKFHybrid, &chaincfg.TestNet3Params),
 			f: func() (cashutil.Address, error) {
 				serializedPubKey := []byte{
 					0x07, 0xb0, 0xbd, 0x63, 0x42, 0x34, 0xab, 0xbb, 0x1b, 0xa1,
@@ -488,7 +488,7 @@ func TestAddresses(t *testing.T) {
 			}
 
 			// Encode again and compare against the original.
-			encoded := decoded.EncodeAddress()
+			encoded := decoded.EncodeAddress(true)
 			if test.encoded != encoded {
 				t.Errorf("%v: decoding and encoding produced different addressess: %v != %v",
 					test.name, test.encoded, encoded)

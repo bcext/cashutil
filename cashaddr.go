@@ -13,7 +13,7 @@ import (
 const charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
 
 // The cashaddr character set for decoding.
-var charset_decoder = [128]int{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+var charsetDecoder = [128]int{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 	-1, 15, -1, 10, 17, 21, 20, 26, 30, 7, 5, -1, -1, -1, -1, -1, -1, -1, 29,
@@ -22,8 +22,8 @@ var charset_decoder = [128]int{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 	18, 22, 31, 27, 19, -1, 1, 0, 3, 16, 11, 28, 12, 14, 6, 4, 2, -1, -1, -1,
 	-1, -1}
 
-// Encode a cashaddr string.
-func Encode(prefix string, payload []byte) string {
+// encode a cashaddr string.
+func encode(prefix string, payload []byte) string {
 	checkSum := createChecksum(prefix, payload)
 	combined := cat(payload, checkSum)
 
@@ -32,12 +32,11 @@ func Encode(prefix string, payload []byte) string {
 	for _, char := range combined {
 		buf.WriteString(string(charset[char]))
 	}
-
 	return buf.String()
 }
 
-// Decode a cashaddr string.
-func Decode(str, defaultPrefix string) (string, []byte) {
+// decode a cashaddr string.
+func decode(str, defaultPrefix string) (string, []byte) {
 	// Go over the string and do some sanity checks.
 	var lower, upper, hasNumber bool
 	prefixSize := 0
@@ -99,11 +98,11 @@ func Decode(str, defaultPrefix string) (string, []byte) {
 	for i := 0; i < valueSize; i++ {
 		c := str[i+prefixSize]
 		// We have an invalid char in there.
-		if c > 127 || charset_decoder[c] == -1 {
+		if c > 127 || charsetDecoder[c] == -1 {
 			return "", nil
 		}
 
-		values[i] = byte(charset_decoder[c])
+		values[i] = byte(charsetDecoder[c])
 	}
 
 	// Verify the checksum.
