@@ -48,7 +48,7 @@ var (
 
 	testHash = "000000000000000000496d7ff9bd2c96154a8d64260e8b3b411e625712abb14c"
 
-	testAddr = "3Nxwenay9Z8Lc9JBiywExpnEFiLp6Afp8v"
+	testAddr = "bitcoincash:pr54mwe99q7vxh22dth6wmqrstnrec86xcrz9gnhh2"
 )
 
 // TestUseBlockHash tests using a block hash as a filter key.
