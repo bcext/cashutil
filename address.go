@@ -115,12 +115,20 @@ func DecodeAddress(addr string, defaultNet *chaincfg.Params) (Address, error) {
 	case ripemd160.Size: // P2PKH or P2SH
 		isP2PKH := chaincfg.IsPubKeyHashAddrID(netID)
 		isP2SH := chaincfg.IsScriptHashAddrID(netID)
+
+		errWrongNet := errors.New("wrong address from different chainparam")
 		switch hash160 := decoded; {
 		case isP2PKH && isP2SH:
 			return nil, ErrAddressCollision
 		case isP2PKH:
+			if netID != defaultNet.PubKeyHashAddrID {
+				return nil, errWrongNet
+			}
 			return newAddressPubKeyHash(hash160, defaultNet)
 		case isP2SH:
+			if netID != defaultNet.ScriptHashAddrID {
+				return nil, errWrongNet
+			}
 			return newAddressScriptHashFromHash(hash160, defaultNet)
 		default:
 			return nil, ErrUnknownAddressType
@@ -138,7 +146,7 @@ type AddressPubKeyHash struct {
 	net  *chaincfg.Params
 }
 
-// NewAddressPubKeyHash returns a new AddressPubKeyHash.  pkHash mustbe 20
+// NewAddressPubKeyHash returns a new AddressPubKeyHash.  pkHash must be 20
 // bytes.
 func NewAddressPubKeyHash(pkHash []byte, param *chaincfg.Params) (*AddressPubKeyHash, error) {
 	return newAddressPubKeyHash(pkHash, param)
